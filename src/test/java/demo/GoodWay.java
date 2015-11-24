@@ -36,10 +36,12 @@ public class GoodWay {
 
     @Test
     public void exampleWrapperArray() {
+        // classic stream way - no checked exceptions
         Stream.of("file # 1", "file # 2")
             .filter(GoodWay::filterFileN)    //  <==>  .filter(f -> filterFileN(f))
             .forEach(GoodWay::checkFileN);   //  <==>  .forEach(f -> checkFileN(f))
 
+        // new stream way - hide existing checked exceptions
         Stream.of("file # 1", "file # 2")
             .filter(f -> Unthrow.wrap(() -> filterFileE(f)))
             .forEach(f -> Unthrow.wrapProc((x) -> checkFileE(x), f)); 
@@ -49,11 +51,13 @@ public class GoodWay {
     /** example: wrapper methods without parameters */
     @Test
     public void exampleWrapperMethodsWithoutParametersTest() {
+        // classic stream way - no checked exceptions
         getUsers().stream()
             .filter(User::isActiveN)
             .map(User::upFirstCharN)
             .forEach(User::printNameN); // .forEach(System.out::println)
 
+        // new stream way - hide existing checked exceptions
         getUsers().stream()
             .filter(u -> Unthrow.wrap(u::isActiveE))
             .map(u -> Unthrow.wrap(u::upFirstCharE))
@@ -63,11 +67,13 @@ public class GoodWay {
     /** example: wrapper methods with one parameter */
     @Test
     public void exampleWrapperMethodsWithOneParameter() {
+        // classic stream way - no checked exceptions
         getUsers().stream()
             .filter(u -> u.firstCharFilterN('a'))
             .map(u -> u.upFirstCharsN(1))
             .forEach(u -> u.printNameTargetN(System.out::println));
 
+        // new stream way - hide existing checked exceptions
         getUsers().stream()
             .filter(u -> Unthrow.wrap(u::firstCharFilterE, 'a'))
             .map(u -> Unthrow.wrap(u::upFirstCharsE, 1))
@@ -77,11 +83,13 @@ public class GoodWay {
     /** example: wrapper methods with two parameters */
     @Test
     public void exampleWrapperMethodsWithTwoParameters() {
+        // classic stream way - no checked exceptions
         getUsers().stream()
             .filter(u -> u.firstCharFilterFailValueN('a', true))
             .map(u -> u.upFirstCharsSuffixN(1, "^"))
             .forEach(u -> u.printNameTargetPrefixN(System.out::println, "mr. "));
 
+        // new stream way - hide existing checked exceptions
         getUsers().stream()
             .filter(u -> Unthrow.wrap(u::firstCharFilterFailValueN, 'a', true))
             .map(u -> Unthrow.wrap(u::upFirstCharsSuffixN, 1, "^"))
