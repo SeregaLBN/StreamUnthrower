@@ -9,7 +9,7 @@ import java.util.stream.Stream;
 import org.junit.Test;
 
 import demo.some.User;
-import utils.stream.Unchecker;
+import utils.stream.Unthrow;;
 
 public class GoodWay {
 
@@ -41,8 +41,8 @@ public class GoodWay {
             .forEach(GoodWay::checkFileN);   //  <==>  .forEach(f -> checkFileN(f))
 
         Stream.of("file # 1", "file # 2")
-            .filter(f -> Unchecker.unthrow(() -> filterFileE(f)))
-            .forEach(f -> Unchecker.unthrowProc((x) -> checkFileE(x), f)); 
+            .filter(f -> Unthrow.wrap(() -> filterFileE(f)))
+            .forEach(f -> Unthrow.wrapProc((x) -> checkFileE(x), f)); 
     }
 
 
@@ -55,9 +55,9 @@ public class GoodWay {
             .forEach(User::printNameN); // .forEach(System.out::println)
 
         getUsers().stream()
-            .filter(u -> Unchecker.unthrow(u::isActiveE))
-            .map(u -> Unchecker.unthrow(u::upFirstCharE))
-            .forEach(u -> Unchecker.unthrowProc(u::printNameE));
+            .filter(u -> Unthrow.wrap(u::isActiveE))
+            .map(u -> Unthrow.wrap(u::upFirstCharE))
+            .forEach(u -> Unthrow.wrapProc(u::printNameE));
     }
 
     /** example: wrapper methods with one parameter */
@@ -69,9 +69,9 @@ public class GoodWay {
             .forEach(u -> u.printNameTargetN(System.out::println));
 
         getUsers().stream()
-            .filter(u -> Unchecker.unthrow(u::firstCharFilterE, 'a'))
-            .map(u -> Unchecker.unthrow(u::upFirstCharsE, 1))
-            .forEach(u -> Unchecker.unthrowProc(u::printNameTargetE, System.out::println));
+            .filter(u -> Unthrow.wrap(u::firstCharFilterE, 'a'))
+            .map(u -> Unthrow.wrap(u::upFirstCharsE, 1))
+            .forEach(u -> Unthrow.wrapProc(u::printNameTargetE, System.out::println));
     }
 
     /** example: wrapper methods with two parameters */
@@ -83,9 +83,9 @@ public class GoodWay {
             .forEach(u -> u.printNameTargetPrefixN(System.out::println, "mr. "));
 
         getUsers().stream()
-            .filter(u -> Unchecker.unthrow(u::firstCharFilterFailValueN, 'a', true))
-            .map(u -> Unchecker.unthrow(u::upFirstCharsSuffixN, 1, "^"))
-            .forEach(u -> Unchecker.unthrowProc(u::printNameTargetPrefixN, System.out::println, "mr. "));
+            .filter(u -> Unthrow.wrap(u::firstCharFilterFailValueN, 'a', true))
+            .map(u -> Unthrow.wrap(u::upFirstCharsSuffixN, 1, "^"))
+            .forEach(u -> Unthrow.wrapProc(u::printNameTargetPrefixN, System.out::println, "mr. "));
     }
 
 }
