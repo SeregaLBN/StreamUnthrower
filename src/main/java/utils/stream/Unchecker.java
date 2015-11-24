@@ -1,5 +1,10 @@
 package utils.stream;
 
+/**
+ * Throw unchecker
+ * @author SeregaLBN
+ *
+ */
 public class Unchecker {
     @SuppressWarnings("unchecked")
     static <R, E extends Exception> R rethrow(Exception ex) throws E {
@@ -54,9 +59,9 @@ public class Unchecker {
         R apply(T1 t1, T2 t2, T3 t3) throws Exception;
     }
 
-    ////////////////////////////////// uncheck Procedures //////////////////////////////////
+    ////////////////////////////////// unthrow Procedures //////////////////////////////////
 
-    public static void uncheckProc(IProc0 proc) {
+    public static void unthrowProc(IProc0 proc) {
         try {
             proc.run();
         } catch (Exception ex) {
@@ -64,7 +69,7 @@ public class Unchecker {
         }
     }
 
-    public static <T> void uncheckProc(IProc1<T> proc, T t) {
+    public static <T> void unthrowProc(IProc1<T> proc, T t) {
         try {
             proc.accept(t);
         } catch (Exception ex) {
@@ -72,7 +77,7 @@ public class Unchecker {
         }
     }
 
-    public static <T1, T2> void uncheckProc(IProc2<T1, T2> proc, T1 t1, T2 t2) {
+    public static <T1, T2> void unthrowProc(IProc2<T1, T2> proc, T1 t1, T2 t2) {
         try {
             proc.accept(t1, t2);
         } catch (Exception ex) {
@@ -80,7 +85,7 @@ public class Unchecker {
         }
     }
 
-    public static <T1, T2, T3> void uncheckProc(IProc3<T1, T2, T3> proc, T1 t1, T2 t2, T3 t3) {
+    public static <T1, T2, T3> void unthrowProc(IProc3<T1, T2, T3> proc, T1 t1, T2 t2, T3 t3) {
         try {
             proc.accept(t1, t2, t3);
         } catch (Exception ex) {
@@ -88,9 +93,9 @@ public class Unchecker {
         }
     }
 
-    ////////////////////////////////// uncheck Functions //////////////////////////////////
+    ////////////////////////////////// unthrow Functions //////////////////////////////////
 
-    public static <R> R uncheck(IFunc0<R> func) {
+    public static <R> R unthrow(IFunc0<R> func) {
         try {
             return func.call();
         } catch (Exception ex) {
@@ -98,7 +103,7 @@ public class Unchecker {
         }
     }
 
-    public static <R, T> R uncheck(IFunc1<R, T> func, T t) {
+    public static <R, T> R unthrow(IFunc1<R, T> func, T t) {
         try {
             return func.apply(t);
         } catch (Exception ex) {
@@ -106,7 +111,7 @@ public class Unchecker {
         }
     }
 
-    public static <R, T1, T2> R uncheck(IFunc2<R, T1, T2> func, T1 t1, T2 t2) {
+    public static <R, T1, T2> R unthrow(IFunc2<R, T1, T2> func, T1 t1, T2 t2) {
         try {
             return func.apply(t1, t2);
         } catch (Exception ex) {
@@ -114,7 +119,7 @@ public class Unchecker {
         }
     }
 
-    public static <R, T1, T2, T3> R uncheck(IFunc3<R, T1, T2, T3> func, T1 t1, T2 t2, T3 t3) {
+    public static <R, T1, T2, T3> R unthrow(IFunc3<R, T1, T2, T3> func, T1 t1, T2 t2, T3 t3) {
         try {
             return func.apply(t1, t2, t3);
         } catch (Exception ex) {
