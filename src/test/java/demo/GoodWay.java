@@ -1,109 +1,91 @@
 package demo;
 
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.nio.file.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Stream;
 
-import org.junit.Assert;
 import org.junit.Test;
 
-import utils.stream.Unchecker;
+import demo.some.User;
+import utils.stream.Unthrow;;
 
 public class GoodWay {
 
-    @Test
-    public void demo1() {
-        try {
-            Stream.of("file # 1", "file # 2")
-                .filter(f -> Unchecker.uncheck(() -> filterFile(f)))
-                .forEach(f -> Unchecker.uncheckProc((x) -> checkFile(x), f));
-
-            Assert.fail(); // there will never be
-
-        } catch (Exception ex) {
-            System.out.println("Exception is instance of " + ex.getClass().getSimpleName() + ": " + ex.getMessage());
-        }
-    }
-
-    static void checkFile(String filePath) throws FileNotFoundException {
-        Path path = Paths.get(filePath);
-        if (Files.notExists(path)) {
-            throw new FileNotFoundException("File is not exist: " + filePath);
-        }
+    /////////////////////////////   dummy stubs   /////////////////////////////
+    static void checkFileN(String filePath) {
         // ...
     }
+    static void checkFileE(String filePath) throws IOException {
+        checkFileN(filePath);
+    }
 
-    static boolean filterFile(String filePath) throws AccessDeniedException {
-        if (filePath == null || filePath.isEmpty())
-            throw new IllegalArgumentException(filePath);
-
-        if (filePath.endsWith("2")) // mock if
-            throw new AccessDeniedException(filePath);
+    static boolean filterFileN(String filePath) {
         return true;
     }
+    static boolean filterFileE(String filePath) throws IOException {
+        return filterFileN(filePath);
+    }
 
+    private static List<User> getUsers() {
+        List<User> users = new ArrayList<>(Arrays.asList(new User("artem"), new User("alex"), new User("mark")));
+        return users;
+    }
+    /////////////////////////////   tests   /////////////////////////////
 
     @Test
-    public void demo2() {
-        class User {
-            String name;
+    public void exampleWrapperArray() {
+        Stream.of("file # 1", "file # 2")
+            .filter(GoodWay::filterFileN)    //  <==>  .filter(f -> filterFileN(f))
+            .forEach(GoodWay::checkFileN);   //  <==>  .forEach(f -> checkFileN(f))
 
-            User(String name) {
-                this.name = name;
-            }
-
-            public boolean isActive() throws IOException {
-                return firstCharFilter('a');
-            }
-
-            public boolean firstCharFilter(char c) throws IOException {
-                return firstCharFilter('a', true);
-            }
-
-            public boolean firstCharFilter(char c, boolean defaultResult) throws IOException {
-                if (!name.startsWith("" + c))
-                    throw new IOException("Bad name '" + name + "'");
-                return defaultResult;
-            }
-        }
-
-        List<User> accounts = new ArrayList<>(Arrays.asList(new User("artem"), new User("alex"), new User("mark")));
-
-        try {
-            accounts.stream()
-                .filter(a -> Unchecker.uncheck(a::isActive))
-                .map(a -> a.name)
-                .forEach(System.out::println);
-
-            Assert.fail(); // there will never be
-        } catch (Exception ex) {
-            System.out.println(ex);
-        }
-
-        try {
-            accounts.stream()
-                .filter(a -> Unchecker.uncheck(a::firstCharFilter, 'a'))
-                .map(a -> a.name)
-                .forEach(System.out::println);
-
-            Assert.fail(); // there will never be
-        } catch (Exception ex) {
-            System.out.println(ex);
-        }
-
-        try {
-            accounts.stream()
-                .filter(a -> Unchecker.uncheck(a::firstCharFilter, 'a', true))
-                .map(a -> a.name)
-                .forEach(System.out::println);
-
-            Assert.fail(); // there will never be
-        } catch (Exception ex) {
-            System.out.println(ex);
-        }
+        Stream.of("file # 1", "file # 2")
+            .filter(f -> Unthrow.wrap(() -> filterFileE(f)))
+            .forEach(f -> Unthrow.wrapProc((x) -> checkFileE(x), f)); 
     }
+
+
+    /** example: wrapper methods without parameters */
+    @Test
+    public void exampleWrapperMethodsWithoutParametersTest() {
+        getUsers().stream()
+            .filter(User::isActiveN)
+            .map(User::upFirstCharN)
+            .forEach(User::printNameN); // .forEach(System.out::println)
+
+        getUsers().stream()
+            .filter(u -> Unthrow.wrap(u::isActiveE))
+            .map(u -> Unthrow.wrap(u::upFirstCharE))
+            .forEach(u -> Unthrow.wrapProc(u::printNameE));
+    }
+
+    /** example: wrapper methods with one parameter */
+    @Test
+    public void exampleWrapperMethodsWithOneParameter() {
+        getUsers().stream()
+            .filter(u -> u.firstCharFilterN('a'))
+            .map(u -> u.upFirstCharsN(1))
+            .forEach(u -> u.printNameTargetN(System.out::println));
+
+        getUsers().stream()
+            .filter(u -> Unthrow.wrap(u::firstCharFilterE, 'a'))
+            .map(u -> Unthrow.wrap(u::upFirstCharsE, 1))
+            .forEach(u -> Unthrow.wrapProc(u::printNameTargetE, System.out::println));
+    }
+
+    /** example: wrapper methods with two parameters */
+    @Test
+    public void exampleWrapperMethodsWithTwoParameters() {
+        getUsers().stream()
+            .filter(u -> u.firstCharFilterFailValueN('a', true))
+            .map(u -> u.upFirstCharsSuffixN(1, "^"))
+            .forEach(u -> u.printNameTargetPrefixN(System.out::println, "mr. "));
+
+        getUsers().stream()
+            .filter(u -> Unthrow.wrap(u::firstCharFilterFailValueN, 'a', true))
+            .map(u -> Unthrow.wrap(u::upFirstCharsSuffixN, 1, "^"))
+            .forEach(u -> Unthrow.wrapProc(u::printNameTargetPrefixN, System.out::println, "mr. "));
+    }
+
 }
