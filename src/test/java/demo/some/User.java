@@ -58,7 +58,9 @@ public class User {
     }
 
     public User upFirstCharsSuffixN(int numberChars, String suffix) {
-        name = name.substring(0, numberChars).toUpperCase() + name.substring(numberChars) + suffix;
+        name = name.substring(0, numberChars).toUpperCase() + name.substring(numberChars);
+        if (suffix != null)
+            name += suffix;
         return this;
     }
 
@@ -87,7 +89,7 @@ public class User {
     }
 
     public void printNameTargetPrefixN(Consumer<String> target, String prefix) {
-        target.accept(prefix + name);
+        target.accept((prefix == null) ? name : (prefix + name));
     }
 
     public void printNameTargetPrefixE(Consumer<String> target, String prefix) throws IOException {
