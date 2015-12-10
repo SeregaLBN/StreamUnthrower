@@ -1,5 +1,7 @@
 package utils.stream;
 
+import java.util.stream.Stream;
+
 /**
  * Throw unchecker
  * @author SeregaLBN
@@ -11,6 +13,20 @@ public class Unthrow {
         throw (E) ex;
     }
 
+    public static<R, E extends Exception> Stream<R> of(Stream<R> stream) throws E {
+        return stream;
+    }
+    public static<R, E1 extends Exception, E2 extends Exception> Stream<R> of2(Stream<R> stream) throws E1, E2 {
+        return stream;
+    }
+    public static<R, E1 extends Exception, E2 extends Exception, E3 extends Exception> Stream<R> of3(Stream<R> stream) throws E1, E2, E3 {
+        return stream;
+    }
+    public static<R, E1 extends Exception, E2 extends Exception, E3 extends Exception, E4 extends Exception> Stream<R> of4(Stream<R> stream) throws E1, E2, E3, E4 {
+        return stream;
+    }
+
+    
     ////////////////////////////////// interfaces ProcedureN //////////////////////////////////
 
     /** like as java.lang.Runnable */

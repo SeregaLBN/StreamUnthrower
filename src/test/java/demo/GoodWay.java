@@ -1,15 +1,17 @@
 package demo;
 
+import demo.some.User;
+import org.junit.Assert;
+import org.junit.Test;
+import utils.stream.Unthrow;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Stream;
 
-import org.junit.Test;
-
-import demo.some.User;
-import utils.stream.Unthrow;;
+;
 
 public class GoodWay {
 
@@ -44,7 +46,16 @@ public class GoodWay {
         // new stream way - hide existing checked exceptions
         Stream.of("file # 1", "file # 2")
             .filter(f -> Unthrow.wrap(() -> filterFileE(f)))
-            .forEach(f -> Unthrow.wrapProc((x) -> checkFileE(x), f)); 
+            .forEach(f -> Unthrow.wrapProc((x) -> checkFileE(x), f));
+
+        // new stream way - _don't_ hide existing checked exceptions -
+        try {
+            Unthrow.<String, IOException>of(Stream.of("file # 1", "file # 2"))
+                    .filter(f -> Unthrow.wrap(() -> filterFileE(f)))
+                    .forEach(f -> Unthrow.wrapProc((x) -> checkFileE(x), f));
+        } catch (IOException ex) {
+            Assert.fail(ex.getMessage());
+        }
     }
 
 
@@ -62,6 +73,16 @@ public class GoodWay {
             .filter(u -> Unthrow.wrap(u::isActiveE))
             .map(u -> Unthrow.wrap(u::upFirstCharE))
             .forEach(u -> Unthrow.wrapProc(u::printNameE));
+
+        // new stream way - _don't_ hide existing checked exceptions -
+        try {
+            Unthrow.<User, IOException>of(getUsers().stream())
+                    .filter(u -> Unthrow.wrap(u::isActiveE))
+                    .map(u -> Unthrow.wrap(u::upFirstCharE))
+                    .forEach(u -> Unthrow.wrapProc(u::printNameE));
+        } catch (IOException ex) {
+            Assert.fail(ex.getMessage());
+        }
     }
 
     /** example: wrapper methods with one parameter */
@@ -78,6 +99,16 @@ public class GoodWay {
             .filter(u -> Unthrow.wrap(u::firstCharFilterE, 'a'))
             .map(u -> Unthrow.wrap(u::upFirstCharsE, 1))
             .forEach(u -> Unthrow.wrapProc(u::printNameTargetE, System.out::println));
+
+        // new stream way - _don't_ hide existing checked exceptions -
+        try {
+            Unthrow.<User, IOException>of(getUsers().stream())
+                    .filter(u -> Unthrow.wrap(u::firstCharFilterE, 'a'))
+                    .map(u -> Unthrow.wrap(u::upFirstCharsE, 1))
+                    .forEach(u -> Unthrow.wrapProc(u::printNameTargetE, System.out::println));
+        } catch (IOException ex) {
+            Assert.fail(ex.getMessage());
+        }
     }
 
     /** example: wrapper methods with two parameters */
@@ -94,6 +125,21 @@ public class GoodWay {
             .filter(u -> Unthrow.wrap(u::firstCharFilterFailValueN, 'a', true))
             .map(u -> Unthrow.wrap(u::upFirstCharsSuffixN, 1, "^"))
             .forEach(u -> Unthrow.wrapProc(u::printNameTargetPrefixN, System.out::println, "mr. "));
+
+        // new stream way - _don't_ hide existing checked exceptions -
+        try {
+            Unthrow.<User, IOException>of(getUsers().stream())
+                    .filter(u -> Unthrow.wrap(u::firstCharFilterFailValueN, 'a', true))
+                    .map(u -> Unthrow.wrap(u::upFirstCharsSuffixN, 1, "^"))
+                    .forEach(u -> Unthrow.wrapProc(u::printNameTargetPrefixN, System.out::println, "mr. "));
+        } catch (IOException ex) {
+            Assert.fail(ex.getMessage());
+        }
+    }
+
+    
+    @Test
+    public void example() {
     }
 
 }
