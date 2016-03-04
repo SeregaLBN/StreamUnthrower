@@ -1,5 +1,7 @@
 # StreamUnthrower
 
+Main thing - see class [Unthrow.java][unthrow]
+
 Lets you use checked exception in lambda expressions.
 One import and use!
 ```java
@@ -22,11 +24,11 @@ import utils.stream.Unthrow;
     }
 ...
 ```
-Full [Demo][untrowMinDemo] example of use.
+Full [Demo][unthrowMinDemo] example of use.
 
 Comparison examples of usage:
-  - [for lambda expressions][untrowGoodWay]
-  - [for local functions][untrowGoodWay2]
+  - [for lambda expressions][unthrowGoodWay]
+  - [for local functions][unthrowGoodWay2]
 
 Features:
 -
@@ -43,6 +45,7 @@ MIT
 **Free Software, Hell Yeah!**
 
 [//]: #
-   [untrowMinDemo]: <https://github.com/SeregaLBN/StreamUnthrower/blob/master/src/test/java/demo/Demo.java>
-   [untrowGoodWay]: <https://github.com/SeregaLBN/StreamUnthrower/blob/master/src/test/java/demo/GoodWay.java>
-   [untrowGoodWay2]: <https://github.com/SeregaLBN/StreamUnthrower/blob/master/src/test/java/demo/GoodWay2.java>
+   [unthrow]: <https://github.com/SeregaLBN/StreamUnthrower/blob/master/src/main/java/utils/stream/Unthrow.java>
+   [unthrowMinDemo]: <https://github.com/SeregaLBN/StreamUnthrower/blob/master/src/test/java/demo/Demo.java>
+   [unthrowGoodWay]: <https://github.com/SeregaLBN/StreamUnthrower/blob/master/src/test/java/demo/GoodWay.java>
+   [unthrowGoodWay2]: <https://github.com/SeregaLBN/StreamUnthrower/blob/master/src/test/java/demo/GoodWay2.java>
