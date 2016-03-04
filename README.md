@@ -43,6 +43,6 @@ MIT
 **Free Software, Hell Yeah!**
 
 [//]: #
-   [untrowMinDemo]: <https://github.com/SeregaLBN/StreamUnthrower/src/test/java/demo/Demo.java>
-   [untrowGoodWay]: <https://github.com/SeregaLBN/StreamUnthrower/src/test/java/demo/GoodWay.java>
-   [untrowGoodWay2]: <https://github.com/SeregaLBN/StreamUnthrower/src/test/java/demo/GoodWay2.java>
+   [untrowMinDemo]: <https://github.com/SeregaLBN/StreamUnthrower/blob/master/src/test/java/demo/Demo.java>
+   [untrowGoodWay]: <https://github.com/SeregaLBN/StreamUnthrower/blob/master/src/test/java/demo/GoodWay.java>
+   [untrowGoodWay2]: <https://github.com/SeregaLBN/StreamUnthrower/blob/master/src/test/java/demo/GoodWay2.java>
