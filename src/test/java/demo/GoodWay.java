@@ -46,13 +46,13 @@ public class GoodWay {
         // new stream way - hide existing checked exceptions
         Stream.of("file # 1", "file # 2")
             .filter(f -> Unthrow.wrap(() -> filterFileE(f)))
-            .forEach(f -> Unthrow.wrapProc((x) -> checkFileE(x), f));
+            .forEach(f -> Unthrow.wrapProc(x -> checkFileE(x), f));
 
         // new stream way - _don't_ hide existing checked exceptions -
         try {
             Unthrow.<String, IOException>of(Stream.of("file # 1", "file # 2"))
                     .filter(f -> Unthrow.wrap(() -> filterFileE(f)))
-                    .forEach(f -> Unthrow.wrapProc((x) -> checkFileE(x), f));
+                    .forEach(f -> Unthrow.wrapProc(x -> checkFileE(x), f));
         } catch (IOException ex) {
             Assert.fail(ex.getMessage());
         }

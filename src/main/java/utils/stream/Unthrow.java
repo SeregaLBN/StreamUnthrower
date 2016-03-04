@@ -5,7 +5,7 @@ import java.util.stream.Stream;
 /**
  * Throw unchecker
  * @author SeregaLBN
- *
+ * how to use - see unit test
  */
 public class Unthrow {
     @SuppressWarnings("unchecked")
@@ -29,18 +29,19 @@ public class Unthrow {
     
     ////////////////////////////////// interfaces ProcedureN //////////////////////////////////
 
-    /** like as java.lang.Runnable */
+    /** like as {@link java.lang.Runnable} */
     @FunctionalInterface
     public interface IProc0 {
-        void run() throws Exception;
+        void accept() throws Exception;
     }
 
-    /** like as java.util.function.Consumer<T> */
+    /** like as {@link java.util.function.Consumer} */
     @FunctionalInterface
     public interface IProc1<T> {
         void accept(T t) throws Exception;
     }
 
+    /** like as {@link java.util.function.BiConsumer} */
     @FunctionalInterface
     public interface IProc2<T1, T2> {
         void accept(T1 t1, T2 t2) throws Exception;
@@ -53,18 +54,19 @@ public class Unthrow {
 
     ////////////////////////////////// interfaces FunctionN //////////////////////////////////
 
-    /** like as java.util.concurrent.Callable<R> */
+    /** like as {@link java.util.concurrent.Callable} */
     @FunctionalInterface
     public interface IFunc0<R> {
-        R call() throws Exception;
+        R apply() throws Exception;
     }
 
-    /** like as java.util.function.Function<T,R> */
+    /** like as {@link java.util.function.Function} */
     @FunctionalInterface
     public interface IFunc1<R, T> {
         R apply(T t) throws Exception;
     }
 
+    /** like as {@link java.util.function.BiFunction} */
     @FunctionalInterface
     public interface IFunc2<R, T1, T2> {
         R apply(T1 t1, T2 t2) throws Exception;
@@ -79,7 +81,7 @@ public class Unthrow {
 
     public static void wrapProc(IProc0 proc) {
         try {
-            proc.run();
+            proc.accept();
         } catch (Exception ex) {
             rethrow(ex);
         }
@@ -113,7 +115,7 @@ public class Unthrow {
 
     public static <R> R wrap(IFunc0<R> func) {
         try {
-            return func.call();
+            return func.apply();
         } catch (Exception ex) {
             return rethrow(ex);
         }
