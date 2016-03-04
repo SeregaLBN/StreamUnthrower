@@ -1,0 +1,41 @@
+apply plugin: 'java'
+
+sourceCompatibility = JavaVersion.VERSION_1_8
+targetCompatibility = JavaVersion.VERSION_1_8
+
+
+allprojects {
+    task hello << { task -> println "I'm $task.project.name" }
+}
+
+defaultTasks 'clean', 'build'
+
+repositories {
+    mavenCentral()
+    //maven { url 'https://repository.jboss.org/nexus/content/groups/public' }
+    //maven { url 'http://repo.spring.io/libs-release-remote' }
+}
+
+sourceSets {
+    main {
+        java { srcDir 'src/main/java' }
+        //resources { srcDir 'src/main/resources' }
+    }
+    test {
+        java { srcDir 'src/test/java' }
+        //resources { srcDir 'src/test/resources' }
+    }
+}
+
+version = '1.0.1'
+
+jar {
+    manifest {
+        attributes 'Implementation-Title': 'StreamUnthrower', 'StreamUnthrower demo lib',
+                   'Implementation-Version': version
+    }
+}
+
+dependencies {
+    testCompile 'junit:junit:4.12'
+}
