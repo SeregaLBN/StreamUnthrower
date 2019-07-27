@@ -1,8 +1,5 @@
 package demo;
 
-import org.junit.Test;
-import utils.stream.Unthrow;
-
 import java.net.InetAddress;
 import java.net.NetworkInterface;
 import java.net.SocketException;
@@ -14,16 +11,24 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
+import org.junit.jupiter.api.Test;
+
+import utils.stream.Unthrow;
+
 /** Test throw unchecker */
 public class UnthrowTest {
 
-    static class StreamHelper {
+    private static class StreamHelper {
+        private StreamHelper() {}
+
         /** {@link Enumeration} as {@link Stream} */
         public static <T> Stream<T> of(Enumeration<T> e) {
             return StreamSupport.stream(
                     Spliterators.spliteratorUnknownSize(
                             new Iterator<T>() {
+                                @Override
                                 public T next() { return e.nextElement(); }
+                                @Override
                                 public boolean hasNext() { return e.hasMoreElements(); }
                             },
                             Spliterator.ORDERED), false);
@@ -45,8 +50,8 @@ public class UnthrowTest {
     public static void main(String[] args) {
         try {
             new UnthrowTest().getMyIpTest();
-        } catch (SocketException e) {
-            e.printStackTrace();
+        } catch (SocketException ex) {
+            ex.printStackTrace(System.err);
         }
     }
 

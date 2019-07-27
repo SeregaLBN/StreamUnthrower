@@ -1,11 +1,15 @@
 package demo;
 
 import java.io.FileNotFoundException;
-import java.nio.file.*;
+import java.nio.file.AccessDeniedException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.stream.Stream;
 
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
+
 
 public class BadWay {
 
@@ -32,9 +36,10 @@ public class BadWay {
                     }
                 });
 
-            Assert.fail(); // there will never be
+            Assertions.fail(); // there will never be
 
         } catch (Exception ex) {
+            // Ok
             System.out.println("Exception is instance of " + ex.getClass().getSimpleName() + ": " + ex.getMessage());
         }
     }

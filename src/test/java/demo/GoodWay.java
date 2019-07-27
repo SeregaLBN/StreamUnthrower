@@ -1,17 +1,15 @@
 package demo;
 
-import demo.some.User;
-import org.junit.Assert;
-import org.junit.Test;
-import utils.stream.Unthrow;
-
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Stream;
 
-;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
+
+import demo.some.User;
+import utils.stream.Unthrow;
 
 public class GoodWay {
 
@@ -31,8 +29,7 @@ public class GoodWay {
     }
 
     private static List<User> getUsers() {
-        List<User> users = new ArrayList<>(Arrays.asList(new User("artem"), new User("alex"), new User("mark")));
-        return users;
+        return Arrays.asList(new User("artem"), new User("alex"), new User("mark"));
     }
     /////////////////////////////   tests   /////////////////////////////
 
@@ -46,15 +43,15 @@ public class GoodWay {
         // new stream way - hide existing checked exceptions
         Stream.of("file # 1", "file # 2")
             .filter(f -> Unthrow.wrap(() -> filterFileE(f)))
-            .forEach(f -> Unthrow.wrapProc(x -> checkFileE(x), f));
+            .forEach(f -> Unthrow.wrapProc(GoodWay::checkFileE, f));
 
         // new stream way - _don't_ hide existing checked exceptions -
         try {
             Unthrow.<String, IOException>of(Stream.of("file # 1", "file # 2"))
                     .filter(f -> Unthrow.wrap(() -> filterFileE(f)))
-                    .forEach(f -> Unthrow.wrapProc(x -> checkFileE(x), f));
+                    .forEach(f -> Unthrow.wrapProc(GoodWay::checkFileE, f));
         } catch (IOException ex) {
-            Assert.fail(ex.getMessage());
+            Assertions.fail(ex.getMessage());
         }
     }
 
@@ -66,7 +63,7 @@ public class GoodWay {
         getUsers().stream()
             .filter(User::isActiveN)
             .map(User::upFirstCharN)
-            .forEach(User::printNameN); // .forEach(System.out::println)
+            .forEach(User::printNameN); // .forEach(GoodWay::log)
 
         // new stream way - hide existing checked exceptions
         getUsers().stream()
@@ -81,7 +78,7 @@ public class GoodWay {
                     .map(u -> Unthrow.wrap(u::upFirstCharE))
                     .forEach(u -> Unthrow.wrapProc(u::printNameE));
         } catch (IOException ex) {
-            Assert.fail(ex.getMessage());
+            Assertions.fail(ex.getMessage());
         }
     }
 
@@ -92,22 +89,22 @@ public class GoodWay {
         getUsers().stream()
             .filter(u -> u.firstCharFilterN('a'))
             .map(u -> u.upFirstCharsN(1))
-            .forEach(u -> u.printNameTargetN(System.out::println));
+            .forEach(u -> u.printNameTargetN(GoodWay::log));
 
         // new stream way - hide existing checked exceptions
         getUsers().stream()
             .filter(u -> Unthrow.wrap(u::firstCharFilterE, 'a'))
             .map(u -> Unthrow.wrap(u::upFirstCharsE, 1))
-            .forEach(u -> Unthrow.wrapProc(u::printNameTargetE, System.out::println));
+            .forEach(u -> Unthrow.wrapProc(u::printNameTargetE, GoodWay::log));
 
         // new stream way - _don't_ hide existing checked exceptions -
         try {
             Unthrow.<User, IOException>of(getUsers().stream())
                     .filter(u -> Unthrow.wrap(u::firstCharFilterE, 'a'))
                     .map(u -> Unthrow.wrap(u::upFirstCharsE, 1))
-                    .forEach(u -> Unthrow.wrapProc(u::printNameTargetE, System.out::println));
+                    .forEach(u -> Unthrow.wrapProc(u::printNameTargetE, GoodWay::log));
         } catch (IOException ex) {
-            Assert.fail(ex.getMessage());
+            Assertions.fail(ex.getMessage());
         }
     }
 
@@ -118,28 +115,27 @@ public class GoodWay {
         getUsers().stream()
             .filter(u -> u.firstCharFilterFailValueN('a', true))
             .map(u -> u.upFirstCharsSuffixN(1, "^"))
-            .forEach(u -> u.printNameTargetPrefixN(System.out::println, "mr. "));
+            .forEach(u -> u.printNameTargetPrefixN(GoodWay::log, "mr. "));
 
         // new stream way - hide existing checked exceptions
         getUsers().stream()
             .filter(u -> Unthrow.wrap(u::firstCharFilterFailValueN, 'a', true))
             .map(u -> Unthrow.wrap(u::upFirstCharsSuffixN, 1, "^"))
-            .forEach(u -> Unthrow.wrapProc(u::printNameTargetPrefixN, System.out::println, "mr. "));
+            .forEach(u -> Unthrow.wrapProc(u::printNameTargetPrefixN, GoodWay::log, "mr. "));
 
         // new stream way - _don't_ hide existing checked exceptions -
         try {
             Unthrow.<User, IOException>of(getUsers().stream())
                     .filter(u -> Unthrow.wrap(u::firstCharFilterFailValueN, 'a', true))
                     .map(u -> Unthrow.wrap(u::upFirstCharsSuffixN, 1, "^"))
-                    .forEach(u -> Unthrow.wrapProc(u::printNameTargetPrefixN, System.out::println, "mr. "));
+                    .forEach(u -> Unthrow.wrapProc(u::printNameTargetPrefixN, GoodWay::log, "mr. "));
         } catch (IOException ex) {
-            Assert.fail(ex.getMessage());
+            Assertions.fail(ex.getMessage());
         }
     }
 
-    
-    @Test
-    public void example() {
+    private static void log(String msg) {
+        System.out.println(msg);
     }
 
 }
